@@ -31,10 +31,11 @@ public class RoomieService {
     private final GPTService gptService;
     private final WeatherService weatherService;
 
+    @Transactional
     public HomeResponseDto getHome(Member member) {
         member = memberRepository.findById(member.getId()).orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 회원을 찾을 수 없습니다."));
 
-        Roomie roomie = getRoomie(member);
+        Roomie roomie = updateRoomieHungerGage(member);
 
         Random random = new Random(System.currentTimeMillis());
 
@@ -67,17 +68,13 @@ public class RoomieService {
                 break;
         }
 
+        roomieRepository.save(roomie);
+
         return HomeResponseDto.from(member, roomie, roomieTalkMsg);
     }
 
-    public RoomieResponseDto getCurrentRoomie(Member member) {
-        member = memberRepository.findById(member.getId()).orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 회원을 찾을 수 없습니다."));
-
+    private Roomie updateRoomieHungerGage(Member member) {
         Roomie roomie = getRoomie(member);
-
-        if (roomie == null) {
-            throw new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 Roomie를 찾을 수 없습니다.");
-        }
 
         if (roomie.getLastFeedTime() == null) {
             roomie.setLastFeedTime(LocalDateTime.now());
@@ -98,9 +95,7 @@ public class RoomieService {
             );
         }
 
-        roomieRepository.save(roomie);
-
-        return RoomieResponseDto.from(roomie);
+        return roomie;
     }
 
     @Transactional
