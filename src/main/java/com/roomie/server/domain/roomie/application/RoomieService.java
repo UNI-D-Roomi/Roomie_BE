@@ -9,6 +9,7 @@ import com.roomie.server.domain.roomie.dto.CompareResponseDto;
 import com.roomie.server.domain.roomie.dto.FeedRoomieResponseDto;
 import com.roomie.server.domain.roomie.dto.HomeResponseDto;
 import com.roomie.server.domain.roomie.dto.RoomieResponseDto;
+import com.roomie.server.domain.weather.application.WeatherService;
 import com.roomie.server.global.exceptions.BadRequestException;
 import com.roomie.server.global.exceptions.ErrorCode;
 import com.roomie.server.global.util.StaticValue;
@@ -28,6 +29,7 @@ public class RoomieService {
     private final MemberRepository memberRepository;
     private final RoomieRepository roomieRepository;
     private final GPTService gptService;
+    private final WeatherService weatherService;
 
     public HomeResponseDto getHome(Member member) {
         member = memberRepository.findById(member.getId()).orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 회원을 찾을 수 없습니다."));
@@ -61,7 +63,7 @@ public class RoomieService {
                 roomieTalkMsg = RoomieMsg.getMsgById(msgRand);
                 break;
             case 3:
-                roomieTalkMsg = "날씨 기반 메세지\n날씨 기반 메세지";
+                roomieTalkMsg = weatherService.getCleaningAdvice();
                 break;
         }
 
