@@ -2,6 +2,7 @@ package com.roomie.server.global.config.security;
 
 import com.roomie.server.domain.member.domain.Member;
 import com.roomie.server.domain.member.domain.repository.MemberRepository;
+import com.roomie.server.global.config.security.userDetails.CustomUserDetails;
 import com.roomie.server.global.exceptions.ErrorCode;
 import com.roomie.server.global.exceptions.InternalServerException;
 import lombok.RequiredArgsConstructor;
@@ -39,8 +40,8 @@ public class SecurityService {
 
      */
 
-    public Member getUserByUserDetails(UserDetails userDetails) {
-        return memberRepository.findByLoginId(userDetails.getUsername()).orElseThrow(
+    public Member getUserByUserDetails(CustomUserDetails userDetails) {
+        return memberRepository.findById(userDetails.getUserId()).orElseThrow(
                 () -> new InternalServerException(ErrorCode.INTERNAL_SERVER, "Token에 해당하는 사용자 정보를 찾을 수 없습니다. 관리자에게 문의 바랍니다."));
     }
 
