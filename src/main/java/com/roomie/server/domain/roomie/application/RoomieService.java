@@ -31,7 +31,7 @@ public class RoomieService {
     public RoomieResponseDto getCurrentRoomie(Member member) {
         member = memberRepository.findById(member.getId()).orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 회원을 찾을 수 없습니다."));
 
-        Roomie roomie = member.getRoomie();
+        Roomie roomie = getRoomie(member);
 
         if (roomie == null) {
             throw new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 Roomie를 찾을 수 없습니다.");
@@ -65,7 +65,7 @@ public class RoomieService {
     public FeedRoomieResponseDto feedWithRoomClean(Member member, String afterImageUrl) {
         member = memberRepository.findById(member.getId()).orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 회원을 찾을 수 없습니다."));
 
-        Roomie roomie = member.getRoomie();
+        Roomie roomie = getRoomie(member);
 
         if (roomie == null) {
             throw new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 Roomie를 찾을 수 없습니다.");
@@ -94,7 +94,7 @@ public class RoomieService {
     public RoomieResponseDto beforeWashDishes(Member member, String beforeImageUrl) {
         member = memberRepository.findById(member.getId()).orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 회원을 찾을 수 없습니다."));
 
-        Roomie roomie = member.getRoomie();
+        Roomie roomie = getRoomie(member);
 
         if (roomie == null) {
             throw new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 Roomie를 찾을 수 없습니다.");
@@ -112,7 +112,7 @@ public class RoomieService {
     public FeedRoomieResponseDto feedWithWashDishes(Member member, String afterImageUrl) {
         member = memberRepository.findById(member.getId()).orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 회원을 찾을 수 없습니다."));
 
-        Roomie roomie = member.getRoomie();
+        Roomie roomie = getRoomie(member);
 
         if (roomie == null) {
             throw new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 Roomie를 찾을 수 없습니다.");
@@ -148,10 +148,14 @@ public class RoomieService {
     public RoomieResponseDto buyRoomieRibbon(Member member) {
         member = memberRepository.findById(member.getId()).orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 회원을 찾을 수 없습니다."));
 
-        Roomie roomie = member.getRoomie();
+        Roomie roomie = getRoomie(member);
 
         if (roomie == null) {
             throw new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 Roomie를 찾을 수 없습니다.");
+        }
+
+        if (member.getRoomie().getIsRibbon()) {
+            throw new BadRequestException(ErrorCode.ROW_ALREADY_EXIST, "이미 리본을 가지고 있습니다.");
         }
 
         if (member.getPoints() < StaticValue.RIBBON_COST) {
@@ -168,6 +172,11 @@ public class RoomieService {
     }
 
 
+    private Roomie getRoomie(Member member) {
+        return roomieRepository.findById(member.getRoomie().getId()).orElseThrow(
+                () -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 Roomie를 찾을 수 없습니다.")
+        );
+    }
 
 
 }
