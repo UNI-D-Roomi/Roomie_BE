@@ -126,9 +126,9 @@ public class RoomieService {
                 roomieRepository.save(roomie);
                 memberRepository.save(member);
 
-                comment = StaticValue.CLEAN_COMMENT + "\n" + compareResponseDto.getComment();
+                comment = StaticValue.CLEAN_COMMENT + " " + compareResponseDto.getComment();
             } else {
-                comment = StaticValue.DIRTY_COMMENT + "\n" + compareResponseDto.getComment();
+                comment = StaticValue.DIRTY_COMMENT + " " + compareResponseDto.getComment();
             }
 
             return FeedRoomieResponseDto.from(roomie, compareResponseDto.getScore(), comment);
@@ -187,9 +187,9 @@ public class RoomieService {
                 roomieRepository.save(roomie);
                 memberRepository.save(member);
 
-                comment = StaticValue.CLEAN_COMMENT + "\n" + compareResponseDto.getComment();
+                comment = StaticValue.CLEAN_COMMENT + " " + compareResponseDto.getComment();
             } else {
-                comment = StaticValue.DIRTY_COMMENT + "\n" + compareResponseDto.getComment();
+                comment = StaticValue.DIRTY_COMMENT + " " + compareResponseDto.getComment();
             }
 
             return FeedRoomieResponseDto.from(roomie, compareResponseDto.getScore(), comment);
