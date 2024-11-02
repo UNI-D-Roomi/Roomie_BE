@@ -5,6 +5,7 @@ import com.roomie.server.domain.member.domain.repository.MemberRepository;
 import com.roomie.server.global.config.security.userDetails.CustomUserDetails;
 import com.roomie.server.global.exceptions.ErrorCode;
 import com.roomie.server.global.exceptions.InternalServerException;
+import com.roomie.server.global.exceptions.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,7 @@ public class SecurityService {
 
     public Member getUserByUserDetails(CustomUserDetails userDetails) {
         return memberRepository.findById(userDetails.getUserId()).orElseThrow(
-                () -> new InternalServerException(ErrorCode.INTERNAL_SERVER, "Token에 해당하는 사용자 정보를 찾을 수 없습니다. 관리자에게 문의 바랍니다."));
+                () -> new UnauthorizedException(ErrorCode.INVALID_JWT, "Token에 해당하는 사용자 정보를 찾을 수 없습니다. 관리자에게 문의 바랍니다."));
     }
 
 }

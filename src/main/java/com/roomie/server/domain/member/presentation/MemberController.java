@@ -35,17 +35,6 @@ public class MemberController {
     }
 
     @Operation(summary = "자기 방 사진 추가", description = "자기 방 사진을 추가합니다.")
-    @PostMapping("/default-room-image")
-    public MemberResponseDto setDefaultRoomImage(
-            @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestHeader String imageUrl
-    ) {
-        Member member = securityService.getUserByUserDetails(userDetails);
-
-        return memberService.setUserDefaultRoomImage(member, imageUrl);
-    }
-
-    @Operation(summary = "자기 방 사진 추가", description = "자기 방 사진을 추가합니다.")
     @PostMapping("/room-image")
     public MemberResponseDto setRoomImage(
             @AuthenticationPrincipal CustomUserDetails userDetails,
@@ -65,19 +54,13 @@ public class MemberController {
         return memberService.signIn(signInRequestDto.getLoginId(), signInRequestDto.getPassword());
     }
 
-    @Operation(summary = "로그인 테스트 API, test 용도")
-    @PostMapping("/test")
-    public Long test(
-            @AuthenticationPrincipal CustomUserDetails userDetails
-    ) {
-        Member member = securityService.getUserByUserDetails(userDetails);
-
-        return memberService.test(member);
-    }
-
     @Operation(summary = "전체 순위 조회", description = "전체 순위를 조회합니다.")
     @GetMapping("/grade")
-    public List<MemberRankingDto> getGradeRank(){
+    public List<MemberRankingDto> getGradeRank(
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ){
+        securityService.getUserByUserDetails(userDetails);
+
         return memberService.getGradeRank();
     }
 

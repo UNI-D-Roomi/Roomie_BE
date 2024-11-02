@@ -7,6 +7,7 @@ import com.roomie.server.domain.roomie.domain.Roomie;
 import com.roomie.server.domain.roomie.domain.repository.RoomieRepository;
 import com.roomie.server.domain.roomie.dto.CompareResponseDto;
 import com.roomie.server.domain.roomie.dto.FeedRoomieResponseDto;
+import com.roomie.server.domain.roomie.dto.HomeResponseDto;
 import com.roomie.server.domain.roomie.dto.RoomieResponseDto;
 import com.roomie.server.global.exceptions.BadRequestException;
 import com.roomie.server.global.exceptions.ErrorCode;
@@ -28,6 +29,16 @@ public class RoomieService {
     private final RoomieRepository roomieRepository;
     private final GPTService gptService;
 
+    public HomeResponseDto getHome(Member member) {
+        member = memberRepository.findById(member.getId()).orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 회원을 찾을 수 없습니다."));
+
+        Roomie roomie = getRoomie(member);
+
+        String roomieTalkMsg = "루미 메세지 테스트\n루미 메세지 테스트";
+
+        return HomeResponseDto.from(member, roomie, roomieTalkMsg);
+    }
+
     public RoomieResponseDto getCurrentRoomie(Member member) {
         member = memberRepository.findById(member.getId()).orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 회원을 찾을 수 없습니다."));
 
@@ -45,9 +56,9 @@ public class RoomieService {
 
             Duration timeDifference = Duration.between(lastFeedTime, now);
 
-            Long differenceToSeconds = timeDifference.getSeconds();
+            long differenceToSeconds = timeDifference.getSeconds();
 
-            Long hungerMinusAmount = differenceToSeconds / StaticValue.HUNGER_MINUS_SECOND_STRIDE;
+            Double hungerMinusAmount = (double) differenceToSeconds / StaticValue.HUNGER_MINUS_SECOND_STRIDE;
 
             double roomieHungerGage = roomie.getHungerGage() - hungerMinusAmount;
 
@@ -71,9 +82,10 @@ public class RoomieService {
             throw new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 Roomie를 찾을 수 없습니다.");
         }
 
-        // TODO: GPT 연결
         try {
             CompareResponseDto compareResponseDto = gptService.compareImages("ROOM", member.getRoomImageUrl(), afterImageUrl);
+
+            String comment;
 
             if (compareResponseDto.getScore() >= StaticValue.SCORE_CUT_OFF) {
                 roomie.setHungerGage(100.0);
@@ -82,9 +94,13 @@ public class RoomieService {
 
                 roomieRepository.save(roomie);
                 memberRepository.save(member);
+
+                comment = StaticValue.ROOM_FEED_COMMENT + "\n" + compareResponseDto.getComment();
+            } else {
+                comment = StaticValue.ROOM_DIRTY_COMMENT + "\n" + compareResponseDto.getComment();
             }
 
-            return FeedRoomieResponseDto.from(roomie, StaticValue.ROOM_FEED_COMMENT + "\n" + compareResponseDto.getComment());
+            return FeedRoomieResponseDto.from(roomie, compareResponseDto.getScore(), comment);
         } catch (IOException e) {
             throw new BadRequestException(ErrorCode.INTERNAL_SERVER, "GPT 서비스에 문제가 발생했습니다.");
         }
@@ -122,9 +138,10 @@ public class RoomieService {
             throw new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "설거지를 하지 않았습니다.");
         }
 
-        // TODO: GPT 연결
         try {
             CompareResponseDto compareResponseDto = gptService.compareImages("WASH", roomie.getBeforeWashImageUrl(), afterImageUrl);
+
+            String comment;
 
             if (compareResponseDto.getScore() >= StaticValue.SCORE_CUT_OFF) {
                 roomie.setHungerGage(100.0);
@@ -136,9 +153,13 @@ public class RoomieService {
 
                 roomieRepository.save(roomie);
                 memberRepository.save(member);
+
+                comment = StaticValue.WASH_DISHES_FEED_COMMENT + "\n" + compareResponseDto.getComment();
+            } else {
+                comment = StaticValue.ROOM_DIRTY_COMMENT + "\n" + compareResponseDto.getComment();
             }
 
-            return FeedRoomieResponseDto.from(roomie, StaticValue.WASH_DISHES_FEED_COMMENT + "\n" + compareResponseDto.getComment());
+            return FeedRoomieResponseDto.from(roomie, compareResponseDto.getScore(), comment);
         } catch (IOException e) {
             throw new BadRequestException(ErrorCode.INTERNAL_SERVER, "GPT 서비스에 문제가 발생했습니다.");
         }
@@ -177,6 +198,5 @@ public class RoomieService {
                 () -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 Roomie를 찾을 수 없습니다.")
         );
     }
-
 
 }

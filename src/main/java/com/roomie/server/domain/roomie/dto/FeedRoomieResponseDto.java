@@ -24,9 +24,11 @@ public class FeedRoomieResponseDto {
 
     private LocalDateTime washingStartTime;
 
+    private Double score;
+
     private String comment;
 
-    public static FeedRoomieResponseDto from(Roomie roomie, String comment) {
+    public static FeedRoomieResponseDto from(Roomie roomie, Double score, String comment) {
         return FeedRoomieResponseDto.builder()
                 .id(roomie.getId())
                 .hungerGage(roomie.getHungerGage())
@@ -34,6 +36,7 @@ public class FeedRoomieResponseDto {
                 .isRibbon(roomie.getIsRibbon())
                 .beforeWashImageUrl(roomie.getBeforeWashImageUrl())
                 .washingStartTime(roomie.getWashingStartTime())
+                .score(score)
                 .comment(comment)
                 .build();
     }

@@ -3,6 +3,7 @@ package com.roomie.server.domain.roomie.presentation;
 import com.roomie.server.domain.member.domain.Member;
 import com.roomie.server.domain.roomie.application.RoomieService;
 import com.roomie.server.domain.roomie.dto.FeedRoomieResponseDto;
+import com.roomie.server.domain.roomie.dto.HomeResponseDto;
 import com.roomie.server.domain.roomie.dto.RoomieResponseDto;
 import com.roomie.server.global.config.security.SecurityService;
 import com.roomie.server.global.config.security.userDetails.CustomUserDetails;
@@ -18,6 +19,16 @@ public class RoomieController {
 
     private final RoomieService roomieService;
     private final SecurityService securityService;
+
+    @Operation(summary = "home 화면 조회")
+    @GetMapping("/home")
+    public HomeResponseDto getHome(
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        Member member = securityService.getUserByUserDetails(userDetails);
+
+        return roomieService.getHome(member);
+    }
 
     @Operation(summary = "Roomie 현재 상태 조회")
     @GetMapping("/current")
@@ -44,22 +55,22 @@ public class RoomieController {
     @PostMapping("/feed/wash-dish/before")
     public RoomieResponseDto beforeWashDishes(
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestHeader String beforeRoomImage
+            @RequestHeader String beforeWashImage
     ) {
         Member member = securityService.getUserByUserDetails(userDetails);
 
-        return roomieService.beforeWashDishes(member, beforeRoomImage);
+        return roomieService.beforeWashDishes(member, beforeWashImage);
     }
 
     @Operation(summary = "설거지 후 사진등록, 평가 먹이주기")
     @PostMapping("/feed/wash-dish/after")
     public FeedRoomieResponseDto feedWithWashDishes(
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestHeader String afterRoomImage
+            @RequestHeader String afterWashImage
     ) {
         Member member = securityService.getUserByUserDetails(userDetails);
 
-        return roomieService.feedWithWashDishes(member, afterRoomImage);
+        return roomieService.feedWithWashDishes(member, afterWashImage);
     }
 
     @Operation(summary = "Roomie Ribbon 구매")
