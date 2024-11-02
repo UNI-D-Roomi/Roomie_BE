@@ -1,5 +1,6 @@
 package com.roomie.server.domain.roomie.application;
 
+import com.roomie.server.domain.ai.GPTService;
 import com.roomie.server.domain.member.domain.Member;
 import com.roomie.server.domain.member.domain.repository.MemberRepository;
 import com.roomie.server.domain.roomie.domain.Roomie;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -24,6 +26,7 @@ public class RoomieService {
 
     private final MemberRepository memberRepository;
     private final RoomieRepository roomieRepository;
+    private final GPTService gptService;
 
     public RoomieResponseDto getCurrentRoomie(Member member) {
         member = memberRepository.findById(member.getId()).orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 회원을 찾을 수 없습니다."));
@@ -69,7 +72,7 @@ public class RoomieService {
         }
 
         // TODO: GPT 연결
-        CompareResponseDto compareResponseDto = null;
+        CompareResponseDto compareResponseDto = gptService.compareImages("ROOM", ?? , afterImageUrl);
 
         if (compareResponseDto.getScore() >= StaticValue.SCORE_CUT_OFF) {
             roomie.setHungerGage(100.0);
@@ -102,7 +105,7 @@ public class RoomieService {
     }
 
     @Transactional
-    public FeedRoomieResponseDto feedWithWashDishes(Member member, String afterImageUrl) {
+    public FeedRoomieResponseDto feedWithWashDishes(Member member, String afterImageUrl) throws IOException {
         member = memberRepository.findById(member.getId()).orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 회원을 찾을 수 없습니다."));
 
         Roomie roomie = member.getRoomie();
@@ -116,7 +119,7 @@ public class RoomieService {
         }
 
         // TODO: GPT 연결
-        CompareResponseDto compareResponseDto = null;
+        CompareResponseDto compareResponseDto = gptService.compareImages("WASH", roomie.getBeforeWashImageUrl(), afterImageUrl);
 
         if (compareResponseDto.getScore() >= StaticValue.SCORE_CUT_OFF) {
             roomie.setHungerGage(100.0);
