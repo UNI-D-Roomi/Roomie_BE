@@ -6,6 +6,7 @@ import com.roomie.server.domain.roomie.domain.Roomie;
 import com.roomie.server.domain.roomie.domain.repository.RoomieRepository;
 import com.roomie.server.domain.roomie.dto.CompareResponseDto;
 import com.roomie.server.domain.roomie.dto.FeedRoomieResponseDto;
+import com.roomie.server.domain.roomie.dto.HomeResponseDto;
 import com.roomie.server.domain.roomie.dto.RoomieResponseDto;
 import com.roomie.server.global.exceptions.BadRequestException;
 import com.roomie.server.global.exceptions.ErrorCode;
@@ -24,6 +25,14 @@ public class RoomieService {
 
     private final MemberRepository memberRepository;
     private final RoomieRepository roomieRepository;
+
+    public HomeResponseDto getHome(Member member) {
+        member = memberRepository.findById(member.getId()).orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 회원을 찾을 수 없습니다."));
+
+        Roomie roomie = getRoomie(member);
+
+        return HomeResponseDto.from(member, roomie);
+    }
 
     public RoomieResponseDto getCurrentRoomie(Member member) {
         member = memberRepository.findById(member.getId()).orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 회원을 찾을 수 없습니다."));
@@ -166,6 +175,5 @@ public class RoomieService {
                 () -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 Roomie를 찾을 수 없습니다.")
         );
     }
-
 
 }
