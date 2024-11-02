@@ -143,6 +143,10 @@ public class RoomieService {
             throw new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 Roomie를 찾을 수 없습니다.");
         }
 
+        if (member.getRoomie().getIsRibbon()) {
+            throw new BadRequestException(ErrorCode.ROW_ALREADY_EXIST, "이미 리본을 가지고 있습니다.");
+        }
+
         if (member.getPoints() < StaticValue.RIBBON_COST) {
             throw new BadRequestException(ErrorCode.NOT_ENOUGH_POINTS, "포인트가 부족합니다.");
         }

@@ -40,18 +40,18 @@ public class RoomieController {
         return roomieService.feedWithRoomClean(member, afterRoomImage);
     }
 
-    @Operation(summary = "설거지 등록")
+    @Operation(summary = "설거지 전 사진 등록")
     @PostMapping("/feed/wash-dish/before")
     public RoomieResponseDto beforeWashDishes(
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestHeader String afterRoomImage
+            @RequestHeader String beforeRoomImage
     ) {
         Member member = securityService.getUserByUserDetails(userDetails);
 
-        return roomieService.beforeWashDishes(member, afterRoomImage);
+        return roomieService.beforeWashDishes(member, beforeRoomImage);
     }
 
-    @Operation(summary = "설거지 평가 먹이주기")
+    @Operation(summary = "설거지 후 사진등록, 평가 먹이주기")
     @PostMapping("/feed/wash-dish/after")
     public FeedRoomieResponseDto feedWithWashDishes(
             @AuthenticationPrincipal CustomUserDetails userDetails,
@@ -62,7 +62,7 @@ public class RoomieController {
         return roomieService.feedWithWashDishes(member, afterRoomImage);
     }
 
-    @Operation(summary = "방 청소 등록")
+    @Operation(summary = "Roomie Ribbon 구매")
     @PutMapping("/buy-riboon")
     public RoomieResponseDto buyRoomieRibbon(
             @AuthenticationPrincipal CustomUserDetails userDetails
