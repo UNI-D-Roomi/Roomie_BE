@@ -5,6 +5,8 @@ import com.roomie.server.domain.member.domain.Member;
 import com.roomie.server.domain.member.dto.JwtToken;
 import com.roomie.server.domain.member.dto.request.SignInRequestDto;
 import com.roomie.server.domain.member.dto.request.SignUpRequestDto;
+import com.roomie.server.domain.member.dto.response.MemberRankResponseDto;
+import com.roomie.server.domain.member.dto.response.MemberRankingDto;
 import com.roomie.server.domain.member.dto.response.MemberResponseDto;
 import com.roomie.server.global.config.security.SecurityService;
 import com.roomie.server.global.config.security.userDetails.CustomUserDetails;
@@ -13,6 +15,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -53,4 +59,21 @@ public class MemberController {
         return memberService.test(member);
     }
 
+    @GetMapping("/grade")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "전체 순위 조회", description = "전체 순위를 조회합니다.")
+    public List<MemberRankingDto> getGradeRank(){
+        return memberService.getGradeRank();
+    }
+
+    @GetMapping("/grade/{memberId}/rank")
+    public ResponseEntity<Object> getMemberRank(@PathVariable Long memberId) {
+        Optional<MemberRankResponseDto> memberRankResponse = memberService.getMemberRank(memberId);
+        if (memberRankResponse.isPresent()) {
+            return ResponseEntity.ok(memberRankResponse.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Member not found in ranking list.");
+        }
+    }
 }
