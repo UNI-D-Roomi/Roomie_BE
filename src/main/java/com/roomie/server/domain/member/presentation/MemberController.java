@@ -35,17 +35,6 @@ public class MemberController {
     }
 
     @Operation(summary = "자기 방 사진 추가", description = "자기 방 사진을 추가합니다.")
-    @PostMapping("/default-room-image")
-    public MemberResponseDto setDefaultRoomImage(
-            @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestHeader String imageUrl
-    ) {
-        Member member = securityService.getUserByUserDetails(userDetails);
-
-        return memberService.setUserDefaultRoomImage(member, imageUrl);
-    }
-
-    @Operation(summary = "자기 방 사진 추가", description = "자기 방 사진을 추가합니다.")
     @PostMapping("/room-image")
     public MemberResponseDto setRoomImage(
             @AuthenticationPrincipal CustomUserDetails userDetails,
