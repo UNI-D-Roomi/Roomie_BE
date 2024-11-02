@@ -1,5 +1,6 @@
 package com.roomie.server.domain.member.domain;
 
+import com.roomie.server.domain.roomie.domain.Roomie;
 import com.roomie.server.global.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,10 +13,6 @@ import lombok.*;
 @Table(name = "member")
 public class Member extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @Column(name = "login_id", nullable = false, unique = true)
     private String loginId;
 
@@ -25,20 +22,30 @@ public class Member extends BaseEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Setter
     @Column(name = "point", nullable = true)
-    private int points;
+    @Builder.Default
+    private Integer points = 0;
+
+    @Setter
+    @Column(name = "room_image_url", nullable = true)
+    private String roomImageUrl;
+
+    @JoinColumn(name = "roomie_id")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Roomie roomie;
 
     public static Member of(
             String loginId,
             String encodedPassword,
             String name,
-            int points
+            Roomie roomie
     ) {
         return Member.builder()
                 .loginId(loginId)
                 .password(encodedPassword)
                 .name(name)
-                .points(points)
+                .roomie(roomie)
                 .build();
     }
 

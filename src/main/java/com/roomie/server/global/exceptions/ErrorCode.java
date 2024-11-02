@@ -17,6 +17,7 @@ public enum ErrorCode {
     TARGET_DELETED(4004, "타겟이 삭제되었습니다."),
     INVALID_HTTP_METHOD(4005, "유효하지 않은 HTTP 메서드입니다."),
     INVALID_FILE_EXTENSION(4016, "유효하지 않은 파일 확장자 입니다."),
+    NOT_ENOUGH_POINTS(4017, "포인트가 부족합니다."),
 
     /**
      * 401 Unauthorized
