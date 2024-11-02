@@ -25,6 +25,6 @@ public enum RoomieMsg {
                 return msg.getMsg();
             }
         }
-        return null;
+        return FIRST.msg;
     }
 }

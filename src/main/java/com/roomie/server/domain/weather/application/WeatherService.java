@@ -100,8 +100,10 @@ public class WeatherService {
                         case "PTY":
                             int pty = Integer.parseInt(fcstValue);
                             if (pty == 1 || pty == 4) {
+                                if (!advice.isEmpty()) advice.append("그리고 ");
                                 advice.append("비가 오니까 빨래를 하긴 어려울 거 같아. ");
                             } else if (pty == 2 || pty == 3) {
+                                if (!advice.isEmpty()) advice.append("그리고 ");
                                 advice.append("눈이 오니 외출 후 청소에 신경 쓰면 좋겠어. ");
                             }
                             break;
@@ -109,8 +111,10 @@ public class WeatherService {
                         case "SKY":
                             int sky = Integer.parseInt(fcstValue);
                             if (sky == 1) {
+                                if (!advice.isEmpty()) advice.append("그리고 ");
                                 advice.append("맑으니 환기하기 좋은 날이야! ");
                             } else if (sky == 3 || sky == 4) {
+                                if (!advice.isEmpty()) advice.append("그리고 ");
                                 advice.append("구름이 많아 실내 공기가 답답할 수 있어, 청소하고 환기해보는 건 어때? ");
                             }
                             break;
@@ -118,8 +122,10 @@ public class WeatherService {
                         case "REH":
                             int reh = Integer.parseInt(fcstValue);
                             if (reh > 70) {
+                                if (!advice.isEmpty()) advice.append("그리고 ");
                                 advice.append("습도가 높아, 빨래가 잘 안 마를 수 있어. ");
                             } else if (reh < 30) {
+                                if (!advice.isEmpty()) advice.append("그리고 ");
                                 advice.append("건조하니 실내 먼지가 많이 쌓일 수 있어, 청소할 때 물걸레를 활용해봐! ");
                             }
                             break;
@@ -127,6 +133,7 @@ public class WeatherService {
                         case "WSD":
                             double windSpeed = Double.parseDouble(fcstValue);
                             if (windSpeed > 10) {
+                                if (!advice.isEmpty()) advice.append("그리고 ");
                                 advice.append("바람이 강하니 먼지가 많이 들어올 수 있어, 청소 준비해! ");
                             }
                             break;
@@ -134,7 +141,7 @@ public class WeatherService {
                 }
             }
 
-            return advice.length() > 0 ? advice.toString() : "해당 시간에 맞는 날씨는 청소에 큰 영향을 주지 않을 것 같아.";
+            return !advice.isEmpty() ? advice.toString() : "날씨가 청소에 큰 영향을 주지 않을 것 같아.";
 
         } catch (Exception e) {
             logger.error("날씨 데이터를 처리하는 중 오류가 발생했습니다: {}", e.getMessage());

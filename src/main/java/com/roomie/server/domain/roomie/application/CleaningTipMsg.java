@@ -26,6 +26,6 @@ public enum CleaningTipMsg {
                 return msg.getMsg();
             }
         }
-        return null;
+        return FIRST.getMsg();
     }
 }
