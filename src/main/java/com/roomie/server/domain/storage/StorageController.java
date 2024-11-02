@@ -17,16 +17,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class StorageController {
 
     private final StorageService uuidFileService;
-    private final SecurityService securityService;
 
     @Operation(summary = "File 단순 업로드(다용도)")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String saveFile(
-            @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestPart(name = "file") MultipartFile file
     ) {
-        securityService.getUserByUserDetails(userDetails);
-
         return uuidFileService.saveFile(file);
     }
 
