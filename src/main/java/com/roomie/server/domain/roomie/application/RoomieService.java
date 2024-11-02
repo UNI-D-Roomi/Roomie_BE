@@ -15,6 +15,7 @@ import com.roomie.server.global.exceptions.ErrorCode;
 import com.roomie.server.global.util.StaticValue;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -24,6 +25,7 @@ import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RoomieService {
 
     private final MemberRepository memberRepository;
@@ -87,9 +89,19 @@ public class RoomieService {
 
             long differenceToSeconds = timeDifference.getSeconds();
 
+            log.info("differenceToSeconds: " + differenceToSeconds);
+
             Double hungerMinusAmount = (double) differenceToSeconds / StaticValue.HUNGER_MINUS_SECOND_STRIDE;
 
+            if (hungerMinusAmount > 100.0) {
+                hungerMinusAmount = 100.0;
+            }
+
+            log.info("hungerMinusAmount: " + hungerMinusAmount);
+
             double roomieHungerGage = roomie.getHungerGage() - hungerMinusAmount;
+
+            log.info("roomieHungerGage: " + roomieHungerGage);
 
             roomie.setHungerGage(
                     Math.max(roomieHungerGage, 0.0)
