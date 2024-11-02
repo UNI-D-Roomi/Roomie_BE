@@ -47,7 +47,7 @@ public class RoomieService {
         int msgCategoryRand = random.nextInt(4);// 0 <= msgRand < 4
         int msgRand;
 
-        String roomieTalkMsg = "루미 메세지 테스트\n루미 메세지 테스트";
+        String roomieTalkMsg;
 
         switch (msgCategoryRand) {
             case 0:
@@ -62,7 +62,7 @@ public class RoomieService {
                 msgRand = random.nextInt(RoomieMsg.getNumOfRoomieMsg());
                 roomieTalkMsg = RoomieMsg.getMsgById(msgRand);
                 break;
-            case 3:
+            default:
                 roomieTalkMsg = weatherService.getCleaningAdvice();
                 break;
         }
