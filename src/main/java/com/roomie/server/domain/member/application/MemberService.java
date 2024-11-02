@@ -76,7 +76,7 @@ public class MemberService {
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
         JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
 
-        redisUtils.setRefreshTokenData(jwtToken.getRefreshToken(), member.getId());
+        // redisUtils.setRefreshTokenData(jwtToken.getRefreshToken(), member.getId());
 
         return jwtToken;
     }
