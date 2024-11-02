@@ -36,6 +36,11 @@ public class Roomie extends BaseEntity {
     @Column(name = "is_washing", nullable = true)
     private LocalDateTime washingStartTime;
 
+    @Setter
+    @Column(name = "num_of_feed", nullable = false)
+    @Builder.Default
+    private Long numOfFeed = 0L;
+
     public static Roomie of() {
         return Roomie.builder()
                 .build();

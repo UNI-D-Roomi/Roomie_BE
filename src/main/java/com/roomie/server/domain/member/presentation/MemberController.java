@@ -28,7 +28,7 @@ public class MemberController {
 
     @Operation(summary = "회원가입", description = "회원가입을 합니다.")
     @PostMapping("/sign-up")
-    public MemberResponseDto signUp(
+    public JwtToken signUp(
             @RequestBody @Valid SignUpRequestDto signUpRequestDto
     ) {
         return memberService.signUp(signUpRequestDto);
@@ -60,7 +60,7 @@ public class MemberController {
             @AuthenticationPrincipal CustomUserDetails userDetails
     ){
         securityService.getUserByUserDetails(userDetails);
-
+        
         return memberService.getGradeRank();
     }
 
