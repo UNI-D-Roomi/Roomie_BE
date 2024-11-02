@@ -54,19 +54,13 @@ public class MemberController {
         return memberService.signIn(signInRequestDto.getLoginId(), signInRequestDto.getPassword());
     }
 
-    @Operation(summary = "로그인 테스트 API, test 용도")
-    @PostMapping("/test")
-    public Long test(
-            @AuthenticationPrincipal CustomUserDetails userDetails
-    ) {
-        Member member = securityService.getUserByUserDetails(userDetails);
-
-        return memberService.test(member);
-    }
-
     @Operation(summary = "전체 순위 조회", description = "전체 순위를 조회합니다.")
     @GetMapping("/grade")
-    public List<MemberRankingDto> getGradeRank(){
+    public List<MemberRankingDto> getGradeRank(
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ){
+        securityService.getUserByUserDetails(userDetails);
+
         return memberService.getGradeRank();
     }
 
