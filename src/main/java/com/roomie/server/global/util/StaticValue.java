@@ -2,7 +2,7 @@ package com.roomie.server.global.util;
 
 public class StaticValue {
 
-    public static final Long HUNGER_MINUS_SECOND_STRIDE = 10L;
+    public static final Double HUNGER_MINUS_SECOND_STRIDE = 0.1;
 
     public static final Double SCORE_CUT_OFF = 30.0;
     public static final String ROOM_FEED_COMMENT = "깨끗한 방 청소로 루미가 배부르게 먹었어요!";

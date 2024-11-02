@@ -56,9 +56,9 @@ public class RoomieService {
 
             Duration timeDifference = Duration.between(lastFeedTime, now);
 
-            Long differenceToSeconds = timeDifference.getSeconds();
+            long differenceToSeconds = timeDifference.getSeconds();
 
-            Long hungerMinusAmount = differenceToSeconds / StaticValue.HUNGER_MINUS_SECOND_STRIDE;
+            Double hungerMinusAmount = (double) differenceToSeconds / StaticValue.HUNGER_MINUS_SECOND_STRIDE;
 
             double roomieHungerGage = roomie.getHungerGage() - hungerMinusAmount;
 
