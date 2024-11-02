@@ -9,5 +9,5 @@ public class StaticValue {
     public static final String WASH_DISHES_FEED_COMMENT = "깨끗한 설거지로 루미가 배부르게 먹었어요!";
     public static final Integer RIBBON_COST = 200;
     public static final Integer FEED_POINT_GAIN = 50;
-    public static final Long IMAGE_FILE_SIZE_LIMIT_IN_KB = 500L;
+    public static final Long IMAGE_FILE_SIZE_LIMIT_IN_KB = 300L;
 }
