@@ -28,9 +28,9 @@ public class RedisUtils {
      * Key: Blacklist:{AccessToken 값}
      * Value: "BLACKLISTED"
      */
-    public void setRefreshTokenData(String key, Long userId, Long expiredTime){
+    public void setRefreshTokenData(String key, Long userId){
         String redisKey = "RefreshToken:" + key;
-        redisTemplate.opsForValue().set(redisKey, userId, expiredTime, TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set(redisKey, userId, expirationMs, TimeUnit.MILLISECONDS);
     }
 
     public Long getRefreshTokenData(String key){
