@@ -78,6 +78,7 @@ public class RoomieService {
 
         if (roomie.getLastFeedTime() == null) {
             roomie.setLastFeedTime(LocalDateTime.now());
+            roomie.setHungerGage(100.0);
         } else {
             LocalDateTime now = LocalDateTime.now();
             LocalDateTime lastFeedTime = roomie.getLastFeedTime();
