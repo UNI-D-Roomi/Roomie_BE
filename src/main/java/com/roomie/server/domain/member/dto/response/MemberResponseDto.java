@@ -2,7 +2,9 @@ package com.roomie.server.domain.member.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 @Builder
 public class MemberResponseDto {
 

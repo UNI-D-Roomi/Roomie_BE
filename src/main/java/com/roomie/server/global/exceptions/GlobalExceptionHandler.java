@@ -22,6 +22,7 @@ public class GlobalExceptionHandler {
     public GlobalExceptionHandler(View error) {
     }
 
+    /*
     @ExceptionHandler(value = {BadRequestException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorResponseDto> handleBadRequestException(BadRequestException exception) {
@@ -154,5 +155,7 @@ public class GlobalExceptionHandler {
                         )
                 );
     }
+
+     */
 
 }

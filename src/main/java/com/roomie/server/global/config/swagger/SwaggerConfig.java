@@ -30,8 +30,8 @@ public class SwaggerConfig {
 
     private Info apiInfo() {
         return new Info()
-                .title("Clean Choice Doc")
-                .description("Clean Choice api 문서")
+                .title("Roomie Doc")
+                .description("Roomie api 문서")
                 .version("1.0.0");
     }
 
