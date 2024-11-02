@@ -45,7 +45,6 @@ public class SecurityConfig {
         corsConfig.addAllowedOrigin("http://localhost:3000");
         corsConfig.addAllowedOrigin("http://localhost:5173");
         corsConfig.addAllowedOrigin("http://localhost:8080");
-        corsConfig.addAllowedOrigin("https://on-boarding-abroad.vercel.app/");
         corsConfig.addAllowedOrigin(feHost);
         corsConfig.addAllowedMethod("*");
         corsConfig.addAllowedHeader("*");
