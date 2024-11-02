@@ -72,18 +72,22 @@ public class RoomieService {
         }
 
         // TODO: GPT 연결
-        CompareResponseDto compareResponseDto = gptService.compareImages("ROOM", ?? , afterImageUrl);
+        try {
+            CompareResponseDto compareResponseDto = gptService.compareImages("ROOM", member.getRoomImageUrl(), afterImageUrl);
 
-        if (compareResponseDto.getScore() >= StaticValue.SCORE_CUT_OFF) {
-            roomie.setHungerGage(100.0);
-            roomie.setLastFeedTime(LocalDateTime.now());
-            member.setPoints(member.getPoints() + StaticValue.FEED_POINT_GAIN);
+            if (compareResponseDto.getScore() >= StaticValue.SCORE_CUT_OFF) {
+                roomie.setHungerGage(100.0);
+                roomie.setLastFeedTime(LocalDateTime.now());
+                member.setPoints(member.getPoints() + StaticValue.FEED_POINT_GAIN);
 
-            roomieRepository.save(roomie);
-            memberRepository.save(member);
+                roomieRepository.save(roomie);
+                memberRepository.save(member);
+            }
+
+            return FeedRoomieResponseDto.from(roomie, StaticValue.ROOM_FEED_COMMENT + "\n" + compareResponseDto.getComment());
+        } catch (IOException e) {
+            throw new BadRequestException(ErrorCode.INTERNAL_SERVER, "GPT 서비스에 문제가 발생했습니다.");
         }
-
-        return FeedRoomieResponseDto.from(roomie, StaticValue.ROOM_FEED_COMMENT + "\n" + compareResponseDto.getComment());
     }
 
     @Transactional
@@ -105,7 +109,7 @@ public class RoomieService {
     }
 
     @Transactional
-    public FeedRoomieResponseDto feedWithWashDishes(Member member, String afterImageUrl) throws IOException {
+    public FeedRoomieResponseDto feedWithWashDishes(Member member, String afterImageUrl) {
         member = memberRepository.findById(member.getId()).orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 회원을 찾을 수 없습니다."));
 
         Roomie roomie = member.getRoomie();
@@ -119,21 +123,25 @@ public class RoomieService {
         }
 
         // TODO: GPT 연결
-        CompareResponseDto compareResponseDto = gptService.compareImages("WASH", roomie.getBeforeWashImageUrl(), afterImageUrl);
+        try {
+            CompareResponseDto compareResponseDto = gptService.compareImages("WASH", roomie.getBeforeWashImageUrl(), afterImageUrl);
 
-        if (compareResponseDto.getScore() >= StaticValue.SCORE_CUT_OFF) {
-            roomie.setHungerGage(100.0);
-            roomie.setLastFeedTime(LocalDateTime.now());
-            roomie.setBeforeWashImageUrl(null);
-            roomie.setWashingStartTime(null);
+            if (compareResponseDto.getScore() >= StaticValue.SCORE_CUT_OFF) {
+                roomie.setHungerGage(100.0);
+                roomie.setLastFeedTime(LocalDateTime.now());
+                roomie.setBeforeWashImageUrl(null);
+                roomie.setWashingStartTime(null);
 
-            member.setPoints(member.getPoints() + StaticValue.FEED_POINT_GAIN);
+                member.setPoints(member.getPoints() + StaticValue.FEED_POINT_GAIN);
 
-            roomieRepository.save(roomie);
-            memberRepository.save(member);
+                roomieRepository.save(roomie);
+                memberRepository.save(member);
+            }
+
+            return FeedRoomieResponseDto.from(roomie, StaticValue.WASH_DISHES_FEED_COMMENT + "\n" + compareResponseDto.getComment());
+        } catch (IOException e) {
+            throw new BadRequestException(ErrorCode.INTERNAL_SERVER, "GPT 서비스에 문제가 발생했습니다.");
         }
-
-        return FeedRoomieResponseDto.from(roomie, StaticValue.WASH_DISHES_FEED_COMMENT + "\n" + compareResponseDto.getComment());
     }
 
     @Transactional
