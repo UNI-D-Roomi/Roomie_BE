@@ -10,4 +10,5 @@ public class StaticValue {
     public static final Integer RIBBON_COST = 200;
     public static final Integer FEED_POINT_GAIN = 50;
     public static final Long IMAGE_FILE_SIZE_LIMIT_IN_KB = 300L;
+    public static final String ROOM_DIRTY_COMMENT = "방이 너무 더러워요! 루미는 더러운 환경에선 밥을 못 먹어요!";
 }

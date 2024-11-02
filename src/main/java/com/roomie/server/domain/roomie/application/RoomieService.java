@@ -85,6 +85,8 @@ public class RoomieService {
         try {
             CompareResponseDto compareResponseDto = gptService.compareImages("ROOM", member.getRoomImageUrl(), afterImageUrl);
 
+            String comment;
+
             if (compareResponseDto.getScore() >= StaticValue.SCORE_CUT_OFF) {
                 roomie.setHungerGage(100.0);
                 roomie.setLastFeedTime(LocalDateTime.now());
@@ -92,9 +94,13 @@ public class RoomieService {
 
                 roomieRepository.save(roomie);
                 memberRepository.save(member);
+
+                comment = StaticValue.ROOM_FEED_COMMENT + "\n" + compareResponseDto.getComment();
+            } else {
+                comment = StaticValue.ROOM_DIRTY_COMMENT + "\n" + compareResponseDto.getComment();
             }
 
-            return FeedRoomieResponseDto.from(roomie, compareResponseDto.getScore(), StaticValue.ROOM_FEED_COMMENT + "\n" + compareResponseDto.getComment());
+            return FeedRoomieResponseDto.from(roomie, compareResponseDto.getScore(), comment);
         } catch (IOException e) {
             throw new BadRequestException(ErrorCode.INTERNAL_SERVER, "GPT 서비스에 문제가 발생했습니다.");
         }
@@ -135,6 +141,8 @@ public class RoomieService {
         try {
             CompareResponseDto compareResponseDto = gptService.compareImages("WASH", roomie.getBeforeWashImageUrl(), afterImageUrl);
 
+            String comment;
+
             if (compareResponseDto.getScore() >= StaticValue.SCORE_CUT_OFF) {
                 roomie.setHungerGage(100.0);
                 roomie.setLastFeedTime(LocalDateTime.now());
@@ -145,9 +153,13 @@ public class RoomieService {
 
                 roomieRepository.save(roomie);
                 memberRepository.save(member);
+
+                comment = StaticValue.WASH_DISHES_FEED_COMMENT + "\n" + compareResponseDto.getComment();
+            } else {
+                comment = StaticValue.ROOM_DIRTY_COMMENT + "\n" + compareResponseDto.getComment();
             }
 
-            return FeedRoomieResponseDto.from(roomie, compareResponseDto.getScore(), StaticValue.WASH_DISHES_FEED_COMMENT + "\n" + compareResponseDto.getComment());
+            return FeedRoomieResponseDto.from(roomie, compareResponseDto.getScore(), comment);
         } catch (IOException e) {
             throw new BadRequestException(ErrorCode.INTERNAL_SERVER, "GPT 서비스에 문제가 발생했습니다.");
         }
