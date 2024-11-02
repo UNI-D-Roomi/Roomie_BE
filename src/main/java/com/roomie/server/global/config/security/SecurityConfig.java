@@ -70,15 +70,15 @@ public class SecurityConfig {
                                 // CORS 테스트 API에 대해서는 모든 요청을 허가
                                 .requestMatchers("/cors/**").permitAll()
                                 // 로그인 API에 대해서는 모든 요청을 허가
-                                .requestMatchers("/api/v1/user/sign-in").permitAll()
+                                .requestMatchers("/api/v1/member/sign-in").permitAll()
                                 // 회원 가입 API에 대해서는 모든 요청을 허가
-                                .requestMatchers("/api/v1/user/sign-up").permitAll()
+                                .requestMatchers("/api/v1/member/sign-up").permitAll()
                                 // 토큰 갱신 API에 대해서는 모든 요청을 허가
-                                .requestMatchers("/api/v1/user/update-token").permitAll()
+                                .requestMatchers("/api/v1/member/update-token").permitAll()
                                 // 중복 체크 api에 대해서는 모든 요청을 허가
-                                .requestMatchers("/api/v1/user/duplicate_check/**").permitAll()
+                                .requestMatchers("/api/v1/member/duplicate_check/**").permitAll()
                                 // USER 권한이 있어야 요청할 수 있음
-                                .requestMatchers("/api/v1/user/test").hasAnyAuthority("AWAIT", "ACTIVE", "TEMPORARY")
+                                .requestMatchers("/api/v1/member/test").hasAnyAuthority("AWAIT", "ACTIVE", "TEMPORARY")
                                 // S3 upload 테스트 API
                                 .requestMatchers("api/v1/uuid-file/**").permitAll()
                                 // Swagger UI에 대해서는 모든 요청을 허가
