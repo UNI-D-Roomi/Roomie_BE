@@ -34,7 +34,9 @@ public class RoomieService {
 
         Roomie roomie = getRoomie(member);
 
-        return HomeResponseDto.from(member, roomie);
+        String roomieTalkMsg = "루미 메세지 테스트\n루미 메세지 테스트";
+
+        return HomeResponseDto.from(member, roomie, roomieTalkMsg);
     }
 
     public RoomieResponseDto getCurrentRoomie(Member member) {
@@ -80,7 +82,6 @@ public class RoomieService {
             throw new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 Roomie를 찾을 수 없습니다.");
         }
 
-        // TODO: GPT 연결
         try {
             CompareResponseDto compareResponseDto = gptService.compareImages("ROOM", member.getRoomImageUrl(), afterImageUrl);
 
@@ -93,7 +94,7 @@ public class RoomieService {
                 memberRepository.save(member);
             }
 
-            return FeedRoomieResponseDto.from(roomie, StaticValue.ROOM_FEED_COMMENT + "\n" + compareResponseDto.getComment());
+            return FeedRoomieResponseDto.from(roomie, compareResponseDto.getScore(), StaticValue.ROOM_FEED_COMMENT + "\n" + compareResponseDto.getComment());
         } catch (IOException e) {
             throw new BadRequestException(ErrorCode.INTERNAL_SERVER, "GPT 서비스에 문제가 발생했습니다.");
         }
@@ -131,7 +132,6 @@ public class RoomieService {
             throw new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "설거지를 하지 않았습니다.");
         }
 
-        // TODO: GPT 연결
         try {
             CompareResponseDto compareResponseDto = gptService.compareImages("WASH", roomie.getBeforeWashImageUrl(), afterImageUrl);
 
@@ -147,7 +147,7 @@ public class RoomieService {
                 memberRepository.save(member);
             }
 
-            return FeedRoomieResponseDto.from(roomie, StaticValue.WASH_DISHES_FEED_COMMENT + "\n" + compareResponseDto.getComment());
+            return FeedRoomieResponseDto.from(roomie, compareResponseDto.getScore(), StaticValue.WASH_DISHES_FEED_COMMENT + "\n" + compareResponseDto.getComment());
         } catch (IOException e) {
             throw new BadRequestException(ErrorCode.INTERNAL_SERVER, "GPT 서비스에 문제가 발생했습니다.");
         }

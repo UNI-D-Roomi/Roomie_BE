@@ -47,7 +47,10 @@ public class HomeResponseDto {
     @Schema(description = "설거지 시작 시")
     private LocalDateTime washingStartTime;
 
-    public static HomeResponseDto from(Member member, Roomie roomie) {
+    @Schema(description = "루미의 대화 메시지")
+    private String roomieTalkMsg;
+
+    public static HomeResponseDto from(Member member, Roomie roomie, String roomieTalkMsg) {
         return HomeResponseDto.builder()
                 .memberId(member.getId())
                 .loginId(member.getLoginId())
@@ -60,6 +63,7 @@ public class HomeResponseDto {
                 .isRibbon(roomie.getIsRibbon())
                 .beforeWashImageUrl(roomie.getBeforeWashImageUrl())
                 .washingStartTime(roomie.getWashingStartTime())
+                .roomieTalkMsg(roomieTalkMsg)
                 .build();
     }
 
