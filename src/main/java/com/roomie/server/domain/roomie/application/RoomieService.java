@@ -108,6 +108,12 @@ public class RoomieService {
             );
         }
 
+        if (roomie.getHungerGage() <= 0.0) {
+            roomie.setHungerGage(0.0);
+        } else if (roomie.getHungerGage() >= 100.0) {
+            roomie.setHungerGage(100.0);
+        }
+
         return roomie;
     }
 
