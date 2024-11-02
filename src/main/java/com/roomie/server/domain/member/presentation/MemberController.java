@@ -4,6 +4,7 @@ import com.roomie.server.domain.member.application.MemberService;
 import com.roomie.server.domain.member.domain.Member;
 import com.roomie.server.domain.member.dto.request.SignUpRequestDto;
 import com.roomie.server.domain.member.dto.response.MemberRankResponseDto;
+import com.roomie.server.domain.member.dto.response.MemberRankingDto;
 import com.roomie.server.domain.member.dto.response.MemberResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -36,7 +37,7 @@ public class MemberController {
     @GetMapping("/grade")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "전체 순위 조회", description = "전체 순위를 조회합니다.")
-    public List<Member> getGradeRank(){
+    public List<MemberRankingDto> getGradeRank(){
         return memberService.getGradeRank();
     }
 

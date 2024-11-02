@@ -4,6 +4,7 @@ import com.roomie.server.domain.member.domain.Member;
 import com.roomie.server.domain.member.domain.repository.MemberRepository;
 import com.roomie.server.domain.member.dto.request.SignUpRequestDto;
 import com.roomie.server.domain.member.dto.response.MemberRankResponseDto;
+import com.roomie.server.domain.member.dto.response.MemberRankingDto;
 import com.roomie.server.domain.member.dto.response.MemberResponseDto;
 import com.roomie.server.global.dtoMapper.MemberDtoMapper;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -41,8 +43,11 @@ public class MemberService {
         return MemberDtoMapper.INSTANCE.toMemberResponseDto(member);
     }
 
-    public List<Member> getGradeRank(){
-        return memberRepository.findAllByOrderByPointsDesc();
+    public List<MemberRankingDto> getGradeRank() {
+        return memberRepository.findAllByOrderByPointsDesc()
+                .stream()
+                .map(member -> new MemberRankingDto(member.getId(), member.getName(), member.getPoints()))
+                .collect(Collectors.toList());
     }
 
     public Optional<MemberRankResponseDto> getMemberRank(Long memberId){
