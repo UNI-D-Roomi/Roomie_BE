@@ -22,140 +22,84 @@ public class GlobalExceptionHandler {
     public GlobalExceptionHandler(View error) {
     }
 
-    /*
     @ExceptionHandler(value = {BadRequestException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorResponseDto> handleBadRequestException(BadRequestException exception) {
+    public ErrorResponseDto handleBadRequestException(BadRequestException exception) {
         GlobalExceptionHandler.log.debug("[Error message]", exception);
-        return ResponseEntity
-                .status(
-                        exception.getErrorCode().getCode()
-                )
-                .body(
-                        ErrorResponseDto.of(exception)
-                );
+        return ErrorResponseDto.of(exception);
     }
 
     @ExceptionHandler(value = {ConstraintViolationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorResponseDto> handleConstraintViolationException(ConstraintViolationException exception) {
+    public ErrorResponseDto handleConstraintViolationException(ConstraintViolationException exception) {
         GlobalExceptionHandler.log.debug("[Error message]", exception);
-        return ResponseEntity
-                .status(
-                        ErrorCode.INVALID_PARAMETER.getCode()
-                )
-                .body(
-                        ErrorResponseDto.of(
+        return ErrorResponseDto.of(
                                 new BadRequestException(ErrorCode.INVALID_PARAMETER)
-                        )
-                );
+        );
     }
 
     @ExceptionHandler(value = {IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorResponseDto> handleIllegalArgumentException(IllegalArgumentException exception) {
+    public ErrorResponseDto handleIllegalArgumentException(IllegalArgumentException exception) {
         GlobalExceptionHandler.log.debug("[Error message]", exception);
-        return ResponseEntity
-                .status(
-                        ErrorCode.INVALID_PARAMETER.getCode()
-                )
-                .body(
-                        ErrorResponseDto.of(
+        return ErrorResponseDto.of(
                                 new BadRequestException(ErrorCode.INVALID_PARAMETER)
-                        )
-                );
+        );
     }
 
     @ExceptionHandler(value = {HttpRequestMethodNotSupportedException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorResponseDto> handleBadHttpRequestMethodException(HttpRequestMethodNotSupportedException exception) {
+    public ErrorResponseDto handleBadHttpRequestMethodException(HttpRequestMethodNotSupportedException exception) {
         GlobalExceptionHandler.log.debug("[Error message]", exception);
-        return ResponseEntity
-                .status(
-                        ErrorCode.INVALID_HTTP_METHOD.getCode()
-                )
-                .body(
-                        ErrorResponseDto.of(
+        return ErrorResponseDto.of(
                                 new BadRequestException(ErrorCode.INVALID_HTTP_METHOD)
-                        )
-                );
+        );
     }
 
     @ExceptionHandler(value = {UnauthorizedException.class})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ResponseEntity<ErrorResponseDto> handleUnauthorizedException(UnauthorizedException exception) {
+    public ErrorResponseDto handleUnauthorizedException(UnauthorizedException exception) {
         GlobalExceptionHandler.log.debug("[Error message]", exception);
-        return ResponseEntity
-                .status(
-                        exception.getErrorCode().getCode()
-                )
-                .body(
-                        ErrorResponseDto.of(
+        return ErrorResponseDto.of(
                                 exception
-                        )
-                );
+        );
     }
 
     @ExceptionHandler(value = {ServiceUnavailableException.class})
     @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
-    public ResponseEntity<ErrorResponseDto> handleServiceUnavailableException(ServiceUnavailableException exception) {
+    public ErrorResponseDto handleServiceUnavailableException(ServiceUnavailableException exception) {
         GlobalExceptionHandler.log.debug("[Error message]", exception);
-        return ResponseEntity
-                .status(
-                        exception.getErrorCode().getCode()
-                )
-                .body(
-                        ErrorResponseDto.of(
+        return ErrorResponseDto.of(
                                 exception
-                        )
-                );
+        );
     }
 
     @ExceptionHandler(value = {AccessDeniedException.class})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ResponseEntity<ErrorResponseDto> handleAccessDeniedException(AccessDeniedException exception) {
+    public ErrorResponseDto handleAccessDeniedException(AccessDeniedException exception) {
         GlobalExceptionHandler.log.debug("[Error message]", exception);
-        return ResponseEntity
-                .status(
-                        ErrorCode.API_NOT_ACCESSIBLE.getCode()
-                )
-                .body(
-                        ErrorResponseDto.of(
+        return ErrorResponseDto.of(
                                 new UnauthorizedException(ErrorCode.API_NOT_ACCESSIBLE)
-                        )
-                );
+        );
     }
 
     @ExceptionHandler(value = {AuthorizationDeniedException.class})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ResponseEntity<ErrorResponseDto> handleAuthorizationDeniedException(AuthorizationDeniedException exception) {
+    public ErrorResponseDto handleAuthorizationDeniedException(AuthorizationDeniedException exception) {
         GlobalExceptionHandler.log.debug("[Error message]", exception);
-        return ResponseEntity
-                .status(
-                        ErrorCode.API_NOT_ACCESSIBLE.getCode()
-                )
-                .body(
-                        ErrorResponseDto.of(
+        return ErrorResponseDto.of(
                                 new UnauthorizedException(ErrorCode.API_NOT_ACCESSIBLE)
-                        )
-                );
+        );
     }
 
     @ExceptionHandler(value = {Exception.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<ErrorResponseDto> unknownException(Exception exception) {
+    public ErrorResponseDto unknownException(Exception exception) {
         GlobalExceptionHandler.log.error("[Error message]", exception);
-        return ResponseEntity
-                .status(
-                        ErrorCode.INTERNAL_SERVER.getCode()
-                )
-                .body(
-                        ErrorResponseDto.of(
+        return ErrorResponseDto.of(
                                 new InternalServerException(ErrorCode.INTERNAL_SERVER)
-                        )
-                );
+        );
     }
 
-     */
 
 }
