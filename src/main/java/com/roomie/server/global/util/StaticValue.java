@@ -8,4 +8,5 @@ public class StaticValue {
     public static final String ROOM_FEED_COMMENT = "깨끗한 방 청소로 루미가 배부르게 먹었어요!";
     public static final String WASH_DISHES_FEED_COMMENT = "깨끗한 설거지로 루미가 배부르게 먹었어요!";
     public static final Integer RIBBON_COST = 200;
+    public static final Integer FEED_POINT_GAIN = 50;
 }

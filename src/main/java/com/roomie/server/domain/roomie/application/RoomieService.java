@@ -74,16 +74,11 @@ public class RoomieService {
         if (compareResponseDto.getScore() >= StaticValue.SCORE_CUT_OFF) {
             roomie.setHungerGage(100.0);
             roomie.setLastFeedTime(LocalDateTime.now());
+            member.setPoints(member.getPoints() + StaticValue.FEED_POINT_GAIN);
+
+            roomieRepository.save(roomie);
+            memberRepository.save(member);
         }
-
-
-        roomie.setHungerGage(100.0);
-        roomie.setLastFeedTime(LocalDateTime.now());
-        roomie.setBeforeWashImageUrl(null);
-        roomie.setIsRibbon(false);
-        roomie.setWashingStartTime(null);
-
-        roomieRepository.save(roomie);
 
         return FeedRoomieResponseDto.from(roomie, StaticValue.ROOM_FEED_COMMENT + "\n" + compareResponseDto.getComment());
     }
@@ -128,9 +123,12 @@ public class RoomieService {
             roomie.setLastFeedTime(LocalDateTime.now());
             roomie.setBeforeWashImageUrl(null);
             roomie.setWashingStartTime(null);
-        }
 
-        roomieRepository.save(roomie);
+            member.setPoints(member.getPoints() + StaticValue.FEED_POINT_GAIN);
+
+            roomieRepository.save(roomie);
+            memberRepository.save(member);
+        }
 
         return FeedRoomieResponseDto.from(roomie, StaticValue.WASH_DISHES_FEED_COMMENT + "\n" + compareResponseDto.getComment());
     }
@@ -149,8 +147,10 @@ public class RoomieService {
             throw new BadRequestException(ErrorCode.NOT_ENOUGH_POINTS, "포인트가 부족합니다.");
         }
 
+        member.setPoints(member.getPoints() - StaticValue.RIBBON_COST);
         roomie.setIsRibbon(true);
 
+        memberRepository.save(member);
         roomieRepository.save(roomie);
 
         return RoomieResponseDto.from(roomie);
