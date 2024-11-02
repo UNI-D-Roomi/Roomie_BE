@@ -15,11 +15,11 @@ import com.roomie.server.global.util.StaticValue;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +34,36 @@ public class RoomieService {
 
         Roomie roomie = getRoomie(member);
 
+        Random random = new Random(System.currentTimeMillis());
+
+        /*
+        0: 청소 팁
+        1: feed 횟수 기반 메세지
+        2: 루미 랜덤 메세지
+        3: 날씨 기반 메세지
+         */
+        int msgCategoryRand = random.nextInt(4);// 0 <= msgRand < 4
+        int msgRand;
+
         String roomieTalkMsg = "루미 메세지 테스트\n루미 메세지 테스트";
+
+        switch (msgCategoryRand) {
+            case 0:
+                msgRand = random.nextInt(CleaningTipMsg.getNumOfCleaningTipMsg());
+                roomieTalkMsg = CleaningTipMsg.getMsgById(msgRand);
+                break;
+            case 1:
+                Long feedCount = roomie.getNumOfFeed();
+                roomieTalkMsg = "루미에게 총 " + feedCount + "번 밥을 주었어요! 루미가 당신에게 호감이 생기고 있어요!";
+                break;
+            case 2:
+                msgRand = random.nextInt(RoomieMsg.getNumOfRoomieMsg());
+                roomieTalkMsg = RoomieMsg.getMsgById(msgRand);
+                break;
+            case 3:
+                roomieTalkMsg = "날씨 기반 메세지\n날씨 기반 메세지";
+                break;
+        }
 
         return HomeResponseDto.from(member, roomie, roomieTalkMsg);
     }
@@ -90,14 +119,16 @@ public class RoomieService {
             if (compareResponseDto.getScore() >= StaticValue.SCORE_CUT_OFF) {
                 roomie.setHungerGage(100.0);
                 roomie.setLastFeedTime(LocalDateTime.now());
-                member.setPoints(member.getPoints() + StaticValue.FEED_POINT_GAIN);
+                member.setPoints(member.getPoints() + compareResponseDto.getScore().intValue());
+
+                roomie.setNumOfFeed(roomie.getNumOfFeed() + 1);
 
                 roomieRepository.save(roomie);
                 memberRepository.save(member);
 
-                comment = StaticValue.ROOM_FEED_COMMENT + "\n" + compareResponseDto.getComment();
+                comment = StaticValue.CLEAN_COMMENT + "\n" + compareResponseDto.getComment();
             } else {
-                comment = StaticValue.ROOM_DIRTY_COMMENT + "\n" + compareResponseDto.getComment();
+                comment = StaticValue.DIRTY_COMMENT + "\n" + compareResponseDto.getComment();
             }
 
             return FeedRoomieResponseDto.from(roomie, compareResponseDto.getScore(), comment);
@@ -149,14 +180,16 @@ public class RoomieService {
                 roomie.setBeforeWashImageUrl(null);
                 roomie.setWashingStartTime(null);
 
-                member.setPoints(member.getPoints() + StaticValue.FEED_POINT_GAIN);
+                roomie.setNumOfFeed(roomie.getNumOfFeed() + 1);
+
+                member.setPoints(member.getPoints() + compareResponseDto.getScore().intValue());
 
                 roomieRepository.save(roomie);
                 memberRepository.save(member);
 
-                comment = StaticValue.WASH_DISHES_FEED_COMMENT + "\n" + compareResponseDto.getComment();
+                comment = StaticValue.CLEAN_COMMENT + "\n" + compareResponseDto.getComment();
             } else {
-                comment = StaticValue.ROOM_DIRTY_COMMENT + "\n" + compareResponseDto.getComment();
+                comment = StaticValue.DIRTY_COMMENT + "\n" + compareResponseDto.getComment();
             }
 
             return FeedRoomieResponseDto.from(roomie, compareResponseDto.getScore(), comment);

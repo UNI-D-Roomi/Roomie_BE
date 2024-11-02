@@ -36,7 +36,7 @@ public class MemberService {
     private final RedisUtils redisUtils;
 
     @Transactional
-    public MemberResponseDto signUp(SignUpRequestDto signUpRequestDto) {
+    public JwtToken signUp(SignUpRequestDto signUpRequestDto) {
 
         if (memberRepository.existsByLoginId(signUpRequestDto.getLoginId())) {
             throw new BadRequestException(ErrorCode.ROW_ALREADY_EXIST, "이미 존재하는 아이디입니다.");
@@ -53,7 +53,8 @@ public class MemberService {
 
         memberRepository.save(member);
 
-        return this.toResponseDto(member);
+        //return this.toResponseDto(member);
+        return this.signIn(signUpRequestDto.getLoginId(), signUpRequestDto.getPassword());
     }
 
 
