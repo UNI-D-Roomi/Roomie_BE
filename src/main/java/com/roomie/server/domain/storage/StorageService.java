@@ -1,11 +1,6 @@
 package com.roomie.server.domain.storage;
 
-import com.roomie.server.domain.member.domain.Member;
 import com.roomie.server.domain.member.domain.repository.MemberRepository;
-import com.roomie.server.domain.member.dto.response.MemberResponseDto;
-import com.roomie.server.global.dtoMapper.MemberDtoMapper;
-import com.roomie.server.global.exceptions.BadRequestException;
-import com.roomie.server.global.exceptions.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +11,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class UuidFileService {
+public class StorageService {
 
     private final AmazonS3Manager amazonS3Manager;
     private final MemberRepository memberRepository;

@@ -56,18 +56,6 @@ public class MemberService {
         return this.toResponseDto(member);
     }
 
-    @Transactional
-    public MemberResponseDto setUserDefaultRoomImage(Member member, String fileUrl) {
-        member = memberRepository.findById(member.getId()).orElseThrow(
-                () -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 회원을 찾을 수 없습니다."));
-
-        member.setRoomImageUrl(fileUrl);
-
-        memberRepository.save(member);
-
-        return this.toResponseDto(member);
-    }
-
 
     @Transactional
     public JwtToken signIn(String loginId, String password) {
