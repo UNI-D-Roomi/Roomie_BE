@@ -72,4 +72,11 @@ public class MemberService {
     private MemberResponseDto toResponseDto(Member member) {
         return MemberDtoMapper.INSTANCE.toMemberResponseDto(member);
     }
+
+    public Long test(Member member) {
+        Member member1 = memberRepository.findById(member.getId()).orElseThrow(
+                () -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 회원을 찾을 수 없습니다."));
+
+        return member1.getId();
+    }
 }

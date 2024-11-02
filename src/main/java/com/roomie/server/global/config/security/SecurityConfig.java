@@ -71,6 +71,7 @@ public class SecurityConfig {
                                 .requestMatchers("/cors/**").permitAll()
                                 // 로그인 API에 대해서는 모든 요청을 허가
                                 .requestMatchers("/api/v1/member/sign-in").permitAll()
+                                .requestMatchers("/api/v1/**").permitAll()
                                 // 회원 가입 API에 대해서는 모든 요청을 허가
                                 .requestMatchers("/api/v1/member/sign-up").permitAll()
                                 // 토큰 갱신 API에 대해서는 모든 요청을 허가
@@ -100,6 +101,7 @@ public class SecurityConfig {
                                 // 이 밖에 모든 요청에 대해서 인증을 필요로 한다는 설정
                                 .anyRequest().authenticated()
                 )
+
                 // 권한 문제 발생 시 AccessDeniedHandler 사용
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .accessDeniedHandler(accessDeniedHandler())  // 403 Forbidden 시 커스텀 핸들러
