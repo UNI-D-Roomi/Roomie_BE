@@ -84,6 +84,15 @@ jobs:
           source: "*.jar"
           target: "/home/ubuntu/app"
 
+      # Redis Server 구동
+      - name: Start redis-server
+        uses: appleboy/ssh-action@master
+        with:
+          key: ${{ secrets.EC2_KEY }}
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          script: |
+            sudo systemctl start redis-server
 
       # EC2에 SSH로 배포 커맨드를 입력하는 step
       - name: Deploy SSH
