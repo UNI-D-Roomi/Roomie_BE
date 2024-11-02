@@ -4,6 +4,7 @@ import com.roomie.server.global.config.jwt.JwtAuthenticationFilter;
 import com.roomie.server.global.config.jwt.JwtTokenProvider;
 import com.roomie.server.global.exceptions.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,6 +35,9 @@ public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
 
+    @Value("${deploy.fe}")
+    private String feHost;
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfig = new CorsConfiguration();
@@ -42,7 +46,7 @@ public class SecurityConfig {
         corsConfig.addAllowedOrigin("http://localhost:5173");
         corsConfig.addAllowedOrigin("http://localhost:8080");
         corsConfig.addAllowedOrigin("https://on-boarding-abroad.vercel.app/");
-        corsConfig.addAllowedOrigin("https://on-refactoring-git-vercel-1425s-projects.vercel.app/");
+        corsConfig.addAllowedOrigin(feHost);
         corsConfig.addAllowedMethod("*");
         corsConfig.addAllowedHeader("*");
         corsConfig.setAllowCredentials(true);
