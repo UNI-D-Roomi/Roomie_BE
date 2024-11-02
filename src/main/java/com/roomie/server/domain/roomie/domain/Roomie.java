@@ -1,9 +1,7 @@
 package com.roomie.server.domain.roomie.domain;
 
 import com.roomie.server.global.domain.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -16,16 +14,31 @@ import java.time.LocalDateTime;
 @Table(name = "roomie")
 public class Roomie extends BaseEntity {
 
+    @Setter
     @Column(name = "hange_gage", nullable = false)
-    private Double hungerGage;
+    @Builder.Default
+    private Double hungerGage = 100.0;
 
-    @Column(name = "last_feed_time", nullable = false)
+    @Setter
+    @Column(name = "last_feed_time", nullable = true)
     private LocalDateTime lastFeedTime;
 
+    @Setter
     @Column(name = "is_ribbon", nullable = false)
-    private Boolean isRibbon;
+    @Builder.Default
+    private Boolean isRibbon = false;
 
+    @Setter
+    @Column(name = "before_wash_image_url", nullable = true)
+    private String beforeWashImageUrl;
+
+    @Setter
     @Column(name = "is_washing", nullable = true)
     private LocalDateTime washingStartTime;
+
+    public static Roomie of() {
+        return Roomie.builder()
+                .build();
+    }
 
 }

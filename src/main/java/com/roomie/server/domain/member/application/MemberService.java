@@ -7,6 +7,7 @@ import com.roomie.server.domain.member.dto.request.SignUpRequestDto;
 import com.roomie.server.domain.member.dto.response.MemberRankResponseDto;
 import com.roomie.server.domain.member.dto.response.MemberRankingDto;
 import com.roomie.server.domain.member.dto.response.MemberResponseDto;
+import com.roomie.server.domain.roomie.domain.Roomie;
 import com.roomie.server.global.config.jwt.JwtTokenProvider;
 import com.roomie.server.global.config.redis.RedisUtils;
 import com.roomie.server.global.dtoMapper.MemberDtoMapper;
@@ -34,17 +35,33 @@ public class MemberService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisUtils redisUtils;
 
+    @Transactional
     public MemberResponseDto signUp(SignUpRequestDto signUpRequestDto) {
+
         if (memberRepository.existsByLoginId(signUpRequestDto.getLoginId())) {
             throw new BadRequestException(ErrorCode.ROW_ALREADY_EXIST, "이미 존재하는 아이디입니다.");
         }
+
+        Roomie roomie = Roomie.of();
 
         Member member = Member.of(
                 signUpRequestDto.getLoginId(),
                 passwordEncoder.encode(signUpRequestDto.getPassword()),
                 signUpRequestDto.getName(),
-                0
+                roomie
         );
+
+        memberRepository.save(member);
+
+        return this.toResponseDto(member);
+    }
+
+    @Transactional
+    public MemberResponseDto setUserDefaultRoomImage(Member member, String fileUrl) {
+        member = memberRepository.findById(member.getId()).orElseThrow(
+                () -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 회원을 찾을 수 없습니다."));
+
+        member.setRoomImageUrl(fileUrl);
 
         memberRepository.save(member);
 
@@ -80,12 +97,6 @@ public class MemberService {
         return MemberDtoMapper.INSTANCE.toMemberResponseDto(member);
     }
 
-    public Long test(Member member) {
-        Member member1 = memberRepository.findById(member.getId()).orElseThrow(
-                () -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 회원을 찾을 수 없습니다."));
-
-        return member1.getId();
-    }
 
     public List<MemberRankingDto> getGradeRank() {
         return memberRepository.findAllByOrderByPointsDesc()
@@ -94,12 +105,47 @@ public class MemberService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<MemberRankResponseDto> getMemberRank(Long memberId) {
+    public MemberRankResponseDto getMemberRank(Long memberId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+                .orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 회원을 찾을 수 없습니다."));
 
         Optional<Integer> rank = memberRepository.findRankByMemberId(memberId);
-        return rank.map(r -> new MemberRankResponseDto(r, member.getPoints()));
+
+        return MemberRankResponseDto.builder()
+                .rank(rank.orElse(0))
+                .points(member.getPoints())
+                .build();
+    }
+
+    public MemberResponseDto getCurrentUser(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 회원을 찾을 수 없습니다."));
+
+        return MemberDtoMapper.INSTANCE.toMemberResponseDto(member);
+    }
+
+
+
+
+    @Transactional
+    public MemberResponseDto setRoomImage(Long id, String imageUrl) {
+        Member member = memberRepository.findById(id).orElseThrow(
+                () -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 회원을 찾을 수 없습니다."));
+
+        member.setRoomImageUrl(imageUrl);
+
+        memberRepository.save(member);
+
+        return this.toResponseDto(member);
+    }
+
+
+
+    public Long test(Member member) {
+        Member member1 = memberRepository.findById(member.getId()).orElseThrow(
+                () -> new BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "해당하는 회원을 찾을 수 없습니다."));
+
+        return member1.getId();
     }
 
 }

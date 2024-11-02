@@ -17,4 +17,13 @@ public class MemberResponseDto {
     @Schema(description = "이름", example = "홍길동")
     private String name;
 
+    @Schema(description = "포인트", example = "100")
+    private Integer points;
+
+    @Schema(description = "방 이미지 URL", example = "https://roomie.com/room/1")
+    private String roomImageUrl;
+
+    @Schema(description = "Roomie id", example = "1")
+    private Long roomieId;
+
 }

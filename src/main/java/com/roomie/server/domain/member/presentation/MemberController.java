@@ -13,16 +13,10 @@ import com.roomie.server.global.config.security.userDetails.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/member")
@@ -30,19 +24,41 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberService memberService;
-
     private final SecurityService securityService;
 
-    @PostMapping("/sign-up")
     @Operation(summary = "회원가입", description = "회원가입을 합니다.")
+    @PostMapping("/sign-up")
     public MemberResponseDto signUp(
             @RequestBody @Valid SignUpRequestDto signUpRequestDto
     ) {
         return memberService.signUp(signUpRequestDto);
     }
 
-    @PostMapping("/sign-in")
+    @Operation(summary = "자기 방 사진 추가", description = "자기 방 사진을 추가합니다.")
+    @PostMapping("/default-room-image")
+    public MemberResponseDto setDefaultRoomImage(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestHeader String imageUrl
+    ) {
+        Member member = securityService.getUserByUserDetails(userDetails);
+
+        return memberService.setUserDefaultRoomImage(member, imageUrl);
+    }
+
+    @Operation(summary = "자기 방 사진 추가", description = "자기 방 사진을 추가합니다.")
+    @PostMapping("/room-image")
+    public MemberResponseDto setRoomImage(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestHeader String imageUrl
+    ) {
+        Member member = securityService.getUserByUserDetails(userDetails);
+
+        return memberService.setRoomImage(member.getId(), imageUrl);
+    }
+
+
     @Operation(summary = "로그인", description = "로그인을 합니다.")
+    @PostMapping("/sign-in")
     public JwtToken signIn(
             @RequestBody SignInRequestDto signInRequestDto
     ) {
@@ -59,21 +75,30 @@ public class MemberController {
         return memberService.test(member);
     }
 
-    @GetMapping("/grade")
-    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "전체 순위 조회", description = "전체 순위를 조회합니다.")
+    @GetMapping("/grade")
     public List<MemberRankingDto> getGradeRank(){
         return memberService.getGradeRank();
     }
 
-    @GetMapping("/grade/{memberId}/rank")
-    public ResponseEntity<Object> getMemberRank(@PathVariable Long memberId) {
-        Optional<MemberRankResponseDto> memberRankResponse = memberService.getMemberRank(memberId);
-        if (memberRankResponse.isPresent()) {
-            return ResponseEntity.ok(memberRankResponse.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Member not found in ranking list.");
-        }
+    @Operation(summary = "내 순위 조회", description = "내 순위를 조회합니다.")
+    @GetMapping("/grade/self")
+    public MemberRankResponseDto getMemberRank(
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        Member member = securityService.getUserByUserDetails(userDetails);
+
+        return memberService.getMemberRank(member.getId());
     }
+
+    @Operation(summary = "현재 사용자 조회", description = "현재 사용자를 조회합니다.")
+    @GetMapping("/current")
+    public MemberResponseDto getCurrentMember(
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        Member member = securityService.getUserByUserDetails(userDetails);
+
+        return memberService.getCurrentUser(member.getId());
+    }
+
 }
