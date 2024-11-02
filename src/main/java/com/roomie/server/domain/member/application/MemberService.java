@@ -24,7 +24,8 @@ public class MemberService {
         Member member = Member.of(
                 signUpRequestDto.getLoginId(),
                 passwordEncoder.encode(signUpRequestDto.getPassword()),
-                signUpRequestDto.getName()
+                signUpRequestDto.getName(),
+                0
         );
 
         memberRepository.save(member);
