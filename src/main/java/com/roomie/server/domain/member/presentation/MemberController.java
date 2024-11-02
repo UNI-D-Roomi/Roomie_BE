@@ -1,6 +1,7 @@
 package com.roomie.server.domain.member.presentation;
 
 import com.roomie.server.domain.member.application.MemberService;
+import com.roomie.server.domain.member.domain.Member;
 import com.roomie.server.domain.member.dto.request.SignUpRequestDto;
 import com.roomie.server.domain.member.dto.response.MemberResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,10 +9,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController("/api/v1/member")
 @RequiredArgsConstructor
@@ -28,6 +28,13 @@ public class MemberController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(memberService.signUp(signUpRequestDto));
+    }
+
+    @GetMapping("/grade")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "전체 순위 조회", description = "전체 순위를 조회합니다.")
+    public List<Member> getGradeRank(){
+        return memberService.getGradeRank();
     }
 
 }

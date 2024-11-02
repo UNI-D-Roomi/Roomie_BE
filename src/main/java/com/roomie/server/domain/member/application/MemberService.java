@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -35,5 +37,9 @@ public class MemberService {
 
     private MemberResponseDto toResponseDto(Member member) {
         return MemberDtoMapper.INSTANCE.toMemberResponseDto(member);
+    }
+
+    public List<Member> getGradeRank(){
+        return memberRepository.findAllByOrderByPointsDesc();
     }
 }
