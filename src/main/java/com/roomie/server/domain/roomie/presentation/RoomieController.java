@@ -30,16 +30,6 @@ public class RoomieController {
         return roomieService.getHome(member);
     }
 
-    @Operation(summary = "Roomie 현재 상태 조회")
-    @GetMapping("/current")
-    public RoomieResponseDto getCurrentRoomie(
-            @AuthenticationPrincipal CustomUserDetails userDetails
-    ) {
-        Member member = securityService.getUserByUserDetails(userDetails);
-
-        return roomieService.getCurrentRoomie(member);
-    }
-
     @Operation(summary = "방 청소 먹이주기")
     @PostMapping("/feed/room")
     public FeedRoomieResponseDto feedWithRoomClean(
