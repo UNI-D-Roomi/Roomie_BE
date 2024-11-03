@@ -1,4 +1,4 @@
-# [2024 Uni-Dthon Team 11: <u>**Roomie**</u>]
+# [2024 Uni-Dthon Team 11: <u>**Roomie**</u> - BE]
 - Demo Video: https://youtu.be/VsJinTHyXHQ
 - Demo Service(It could be closed soon!): https://roomie-service.netlify.app/
 
