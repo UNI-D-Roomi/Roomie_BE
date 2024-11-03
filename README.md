@@ -3,14 +3,14 @@
 - Demo Service(It could be closed soon!): https://roomie-service.netlify.app/
 
 # 1. How we Impl BE-Server?
-- BE Architecture
+### BE Architecture
   ![image](https://github.com/user-attachments/assets/d86a799f-f82a-4692-a930-2492e4a232a0)
-- Core Feature
-  1. 깨끗한 방인지 판단 후 점수 매기기/코멘트 생성
-  2. 기상청 API로 날씨 불러오기
-  3. Roomie Hunger Gage 시간 비례 줄어들기
-  4. Roomie 랜덤 메세지 불러오기
-  5. 이미지 Resizing
+### Core Feature
+1. 깨끗한 방인지 판단 후 점수 매기기/코멘트 생성
+2. 기상청 API로 날씨 불러오기
+3. Roomie Hunger Gage 시간 비례 줄어들기
+4. Roomie 랜덤 메세지 불러오기
+5. 이미지 Resizing
 <br><br><br>
 # 2. Service Information
 ## 2-a. Service Background
