@@ -8,9 +8,14 @@
 ### Core Feature
 1. 깨끗한 방인지 판단 후 점수 매기기/코멘트 생성
 2. 기상청 API로 날씨 불러오기
-3. Roomie Hunger Gage 시간 비례 줄어들기
-4. Roomie 랜덤 메세지 불러오기
-5. 이미지 Resizing
+3. Roomie 키우기 점수 랭킹 기능
+4. Roomie Hunger Gage 시간 비례 줄어들기
+5. Roomie 랜덤 메세지 불러오기
+  - 청소 관련 팁/Roomie의 캐릭터성 메세지/날씨 기반 청소 팁/사용자 맞춤 상호작용으로 총 4개 카테고리로 Roomie의 랜덤 메세지를 정의했습니다.
+6. 이미지 Resizing
+  - 최근 스마트폰 카메라의 성능이 좋아져 업로드 파일이 20~30MB 가량의 크기가 나와 Latency가 지나치게 큰 문제가 있었습니다.
+  - 이를 해결하기 위해 이미지 파일 압축으로 해상도 손실이 있더라도 GPT 모델 추론에 문제가 없는지 확인 후 이미지 파일 압축을 결정했습니다.
+  - ***Latency를 60sec 이상 -> 4~6sec 로 줄였습니다.***: `thumbnailator` 의존성을 통해 이미지 크기를 300KB 이하로 제한하여 위 문제를 해결했습니다.
 <br><br><br>
 # 2. Service Information
 ## 2-a. Service Background
